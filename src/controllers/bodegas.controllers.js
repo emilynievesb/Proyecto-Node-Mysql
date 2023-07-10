@@ -52,7 +52,7 @@ const crearBodegas = async (req, res) => {
     created_at,
     updated_at,
     deleted_at
-    ) VALUES (${id},'${nombre}',${id_responsable},${estado},${created_by},${update_by},'${created_at}','${updated_at}','${deleted_at}')
+    ) VALUES (${id},\"${nombre}\",${id_responsable},${estado},${created_by},${update_by},\"${created_at}\",\"${updated_at}\",\"${deleted_at}\")
     `;
     // console.log(sqlQuery(query));
     const result = await sqlQuery(query);

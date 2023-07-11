@@ -32,6 +32,58 @@ const listaProductos = async (req, res) => {
   }
 };
 
+//!5TO ENDPOINT, DONDE SE AGREGA O SE ACTUALIZA UN REGISTRO DE INVENTARIO
+const nuevoInventario = async (req, res) => {
+  const {
+    id_bodega,
+    id_producto,
+    cantidad,
+    created_by,
+    update_by,
+    created_at,
+    updated_at,
+    deleted_at,
+  } = req.body;
+  try {
+    const queryID = /*sql */ `
+    SELECT id FROM inventarios
+    WHERE id_bodega = ${id_bodega} AND id_producto = ${id_producto};
+    `;
+    const resultID = await sqlQuery(queryID);
+    let queryInv = "";
+    if (resultID.data.length === 1) {
+      const { id } = resultID.data[0];
+      queryInv = /*sql */ `
+      UPDATE inventarios
+      SET cantidad = ${cantidad}, created_by = ${created_by},
+      update_by = ${update_by}, created_at = \"${created_at}\",
+      updated_at = \"${updated_at}\", deleted_at = \"${deleted_at}\"
+      WHERE id = ${id};
+      `;
+    } else {
+      queryInv = /*sql */ `
+      INSERT INTO inventarios (
+        id_bodega,
+        id_producto,
+        cantidad,
+        created_by,
+        update_by,
+        created_at,
+        updated_at,
+        deleted_at
+      ) VALUES(
+        ${id_bodega},${id_producto}, ${cantidad}, ${created_by}, ${update_by}, \"${created_at}\", \"${updated_at}\", \"${deleted_at}\"
+      )
+      `;
+    }
+    const result = await sqlQuery(queryInv);
+    res.send(result);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
 export const methodsHTTP = {
   listaProductos: listaProductos,
+  nuevoInventario: nuevoInventario,
 };

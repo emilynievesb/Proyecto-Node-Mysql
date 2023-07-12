@@ -19,7 +19,6 @@ const sqlQuery = (sql) => {
 //!4TO ENDPOINT, DONDE SE AGREGAN PRODUCTOS Y UN INVENTARIO POR DEFAULT
 const agregarProducto = async (req, res) => {
   const {
-    id,
     nombre,
     descripcion,
     estado,

@@ -1,8 +1,9 @@
 
+DROP DATABASE db_prueba_backend_sql;
 CREATE DATABASE db_prueba_backend_sql;
 USE db_prueba_backend_sql;
 CREATE TABLE users (
-    id BIGINT(20) UNSIGNED NOT NULL,
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     email_verified_at TIMESTAMP,
@@ -17,7 +18,7 @@ CREATE TABLE users (
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 CREATE TABLE productos(
-    id BIGINT(20) UNSIGNED,
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT,
     nombre VARCHAR(255),
     descripcion VARCHAR(255),
     estado TINYINT(4),
@@ -32,7 +33,7 @@ CREATE TABLE productos(
     );
 
 CREATE TABLE bodegas(
-    id BIGINT(20) UNSIGNED,
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT,
     nombre VARCHAR(255),
     id_responsable BIGINT(20) UNSIGNED,
     estado TINYINT(4),
@@ -47,7 +48,7 @@ CREATE TABLE bodegas(
     CONSTRAINT fk_UsersBodegasUpdate FOREIGN KEY (update_by) REFERENCES users(id)
 );
 CREATE TABLE inventarios(
-    id BIGINT(20) UNSIGNED,
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT,
     id_bodega BIGINT(20) UNSIGNED,
     id_producto BIGINT(20) UNSIGNED,
     cantidad INT(11),
@@ -62,7 +63,7 @@ CREATE TABLE inventarios(
     CONSTRAINT fk_UsersInventariosUpdate FOREIGN KEY (update_by) REFERENCES users(id)
 );
 CREATE TABLE historiales(
-    id BIGINT(20) UNSIGNED,
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT,
     cantidad INT(11),
     id_bodega_origen BIGINT(20) UNSIGNED,
     id_bodega_destino BIGINT(20) UNSIGNED,
@@ -75,6 +76,7 @@ CREATE TABLE historiales(
     CONSTRAINT pk_historiales PRIMARY KEY (id),
     CONSTRAINT fk_UsersHistorialesBodega_origen FOREIGN KEY (id_bodega_origen) REFERENCES bodegas(id),
     CONSTRAINT fk_UsersHistorialesBodega_destino FOREIGN KEY (id_bodega_destino) REFERENCES bodegas(id),
+    CONSTRAINT fk_UsersHistorialesInventario FOREIGN KEY (id_inventario) REFERENCES inventarios(id),
     CONSTRAINT fk_UsersHistorialesCreated FOREIGN KEY (created_by) REFERENCES users(id),
     CONSTRAINT fk_UsersHistorialesUpdate FOREIGN KEY (update_by) REFERENCES users(id)
 );

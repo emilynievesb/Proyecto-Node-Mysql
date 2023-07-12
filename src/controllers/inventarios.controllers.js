@@ -25,16 +25,7 @@ const listaProductos = async (req, res) => {
 
 //!5TO ENDPOINT, DONDE SE AGREGA O SE ACTUALIZA UN REGISTRO DE INVENTARIO
 const nuevoInventario = async (req, res) => {
-  const {
-    id_bodega,
-    id_producto,
-    cantidad,
-    created_by,
-    update_by,
-    created_at,
-    updated_at,
-    deleted_at,
-  } = req.body;
+  const { id_bodega, id_producto, cantidad } = req.body;
   try {
     //Trae la consulta que revisará si hay registros
     const queryID = searchReq(id_bodega, id_producto);
@@ -51,6 +42,11 @@ const nuevoInventario = async (req, res) => {
       );
     } else {
       //No hay registro existente entonces procede a crearlo
+      let created_by = 15;
+      let update_by = 15;
+      let created_at = "null";
+      let updated_at = "null";
+      let deleted_at = "null";
       queryInv = postReqInv(
         id_bodega,
         id_producto,

@@ -1,5 +1,3 @@
-
-DROP DATABASE db_prueba_backend_sql;
 CREATE DATABASE db_prueba_backend_sql;
 USE db_prueba_backend_sql;
 CREATE TABLE users (

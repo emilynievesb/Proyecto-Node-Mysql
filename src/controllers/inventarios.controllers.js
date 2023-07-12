@@ -1,97 +1,11 @@
-import getConnection from "../db/connect.js";
-const connection = getConnection();
-
-//FUNCIÓN QUE EJECUTA LOS QUERYS
-const sqlQuery = (sql) => {
-  return new Promise((resolve, reject) => {
-    connection.query(sql, (err, data, fil) => {
-      if (err) {
-        reject({ status: "error", error: err });
-        console.log(err);
-      } else {
-        resolve({ status: "sucess", data: data });
-        console.log(sql, { status: "sucess", data: data });
-      }
-    });
-  });
-};
-//Función que retorna consultas INSERT INTO
-const postReqInv = (
-  id_bodega,
-  id_producto,
-  cantidad,
-  created_by,
-  update_by,
-  created_at,
-  updated_at,
-  deleted_at
-) => {
-  let query = /*sql */ `
-  INSERT INTO inventarios (
-    id_bodega,
-    id_producto,
-    cantidad,
-    created_by,
-    update_by,
-    created_at,
-    updated_at,
-    deleted_at
-  ) VALUES(
-    ${id_bodega},${id_producto}, ${cantidad}, ${created_by},
-    ${update_by}, \"${created_at}\", \"${updated_at}\", \"${deleted_at}\"
-  )
-  `;
-  return query;
-};
-
-//Función que retorna consultas UPDATE
-const updateReqInv = (id, cantidad) => {
-  let query = /*sql */ `
-  UPDATE inventarios
-  SET cantidad = ${cantidad}
-  WHERE id = ${id};
-  `;
-  return query;
-};
-
-//Función que retorna consultas select
-const searchReq = (id_bodega, id_producto) => {
-  let query = /*sql */ `
-  SELECT * FROM inventarios
-  WHERE id_bodega = ${id_bodega} AND id_producto = ${id_producto};
-  `;
-  return query;
-};
-
-const postReqHistorial = (
-  cantidad,
-  id_bodega_origen,
-  id_bodega_destino,
-  id_inventario,
-  created_by,
-  update_by,
-  created_at,
-  updated_at,
-  deleted_at
-) => {
-  let query = /*sql*/ `
-  INSERT INTO historiales (
-    cantidad,
-    id_bodega_origen,
-    id_bodega_destino,
-    id_inventario,
-    created_by,
-    update_by,
-    created_at,
-    updated_at,
-    deleted_at
-  ) VALUES(
-    ${cantidad}, ${id_bodega_origen}, ${id_bodega_destino},${id_inventario}, ${created_by},
-    ${update_by}, \"${created_at}\", \"${updated_at}\", \"${deleted_at}\"
-  )
-  `;
-  return query;
-};
+import {
+  sqlQuery,
+  postReqInv,
+  updateReqInv,
+  searchReq,
+  postReqHistorial,
+  lastId,
+} from "../utils/utils.js";
 
 //!3ER ENDPOINT, DONDE SE SUMAN LAS CANTIDADES DE PRODUCTO EN TODAS LAS BODEGAS
 const listaProductos = async (req, res) => {
@@ -150,12 +64,13 @@ const nuevoInventario = async (req, res) => {
     }
     //ejecuta la consulta
     const result = await sqlQuery(queryInv);
-    res.send(result);
+    res.send(`Inventario creado o actualizado`);
   } catch (error) {
     res.send(error);
   }
 };
 
+//!6TO ENDPOINT QUE HACE TRASLADOS DE INVENTARIOS Y GENERA HISTORIALES
 const trasladoProducto = async (req, res) => {
   const {
     id_producto,
@@ -238,9 +153,7 @@ const trasladoProducto = async (req, res) => {
           `La consulta de creación de inventario en la bodega destino falló`
         );
       }
-      const queryIdInventario = /*sql*/ `
-      SELECT LAST_INSERT_ID() AS id
-      `;
+      const queryIdInventario = lastId();
       const resultIdInventario = await sqlQuery(queryIdInventario);
       if (resultIdInventario.status !== "sucess") {
         throw new Error(

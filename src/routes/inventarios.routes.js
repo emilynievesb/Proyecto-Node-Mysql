@@ -7,5 +7,7 @@ const router = Router();
 router.get("/cantProductos", inventariosController.listaProductos);
 //? 8. ENDPOINT QUE INSERTA O ACTUALIZA REGISTROS DE INVENTARIOS
 router.post("/nuevoInventario", inventariosController.nuevoInventario);
+//? 9. ENDPOINT QUE TRASLADA PRODUCTOS ENTRE BODEGAS
+router.post("/traslado", inventariosController.trasladoProducto);
 
 export default router;
